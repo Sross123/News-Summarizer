@@ -10,8 +10,10 @@ search_tool = TavilySearchResults(max_result=5)
 
 llm = ChatMistralAI(model_name="mistral-small-2603")
 
+
+
 prompt = ChatPromptTemplate(
-   ("system", """
+   ("""
     You are a helpfull assistant
     
     summarize the following news into clear bullet points
@@ -22,8 +24,15 @@ prompt = ChatPromptTemplate(
 
 chain = prompt | llm | StrOutputParser()
 
-news_result = search_tool.run("Latest AI news of 2026")
-
-result = chain.invoke({ "news" : news_result})
-
-print(result)
+while True:
+    user_query= input("Enter news topic (or type 'exit' to quit): ").strip()
+    
+    if user_query.lower() == "exit":
+        break
+    
+    news_result = search_tool.run(user_query)
+    
+    result = chain.invoke({"news": news_result})
+    print(result)
+    
+    print("\n" + "-" * 40 + "\n")
